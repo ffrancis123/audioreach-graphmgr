@@ -70,8 +70,8 @@ PKG_CHECK_MODULES([SPF], [spf])
 AC_SUBST(SPF_CFLAGS)
 
 
-PKG_CHECK_MODULES([MMHEADERS], [mm-audio-headers])
-AC_SUBST([MMHEADERS_CFLAGS])
+PKG_CHECK_MODULES([KVH2XML], [kvh2xml])
+AC_SUBST([KVH2XML_CFLAGS])
 
 # Check dependency only if with_no_ipc is not set
 if (test "x${with_no_ipc}" = "xno"); then
