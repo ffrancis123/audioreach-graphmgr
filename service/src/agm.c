@@ -61,17 +61,14 @@ static void *ats_init_thread(void *obj __unused)
     int retry = 0;
 
     while(retry++ < MAX_RETRIES) {
-        if (agm_initialized) {
-            ret = ats_init();
-            if (0 != ret) {
-                AGM_LOGE("ats_init failed retry %d err %d", retry, ret);
-                usleep(RETRY_INTERVAL_US);
-            } else {
-                AGM_LOGD("ATS initialized");
-                break;
-            }
+        ret = ats_init();
+        if (0 != ret) {
+            AGM_LOGE("ats_init failed retry %d err %d", retry, ret);
+            usleep(RETRY_INTERVAL_US);
+        } else {
+            AGM_LOGD("ATS initialized");
+            break;
         }
-        usleep(RETRY_INTERVAL_US);
     }
     return NULL;
 }
@@ -99,17 +96,18 @@ int agm_init()
     param.sched_priority = SCHED_FIFO;
     pthread_attr_setschedparam (&tattr, &param);
 
-    ret = pthread_create(&ats_thread, (const pthread_attr_t *) &tattr,
-                                           ats_init_thread, NULL);
-    if (ret)
-        AGM_LOGE(" ats init thread creation failed\n");
-
     ret = session_obj_init();
     if (0 != ret) {
         AGM_LOGE("Session_obj_init failed with %d", ret);
         goto exit;
     }
+
     agm_initialized = 1;
+
+    ret = pthread_create(&ats_thread, (const pthread_attr_t *) &tattr,
+                                           ats_init_thread, NULL);
+    if (ret)
+        AGM_LOGE(" ats init thread creation failed\n");
 
 exit:
     return ret;
