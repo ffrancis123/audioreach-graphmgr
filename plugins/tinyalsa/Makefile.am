@@ -25,6 +25,7 @@ if AGM_NO_IPC
 libagm_pcm_plugin_la_CFLAGS += -DAGM_NO_IPC
 libagm_pcm_plugin_la_LDFLAGS += -lagm -L$(top_builddir)/service/.libs
 else
+
 libagm_pcm_plugin_la_LDFLAGS += -lagmclient -L$(top_builddir)/ipc/DBus/agm_client/.libs
 endif
 
@@ -49,5 +50,6 @@ if AGM_NO_IPC
 libagm_mixer_plugin_la_CFLAGS += -DAGM_NO_IPC
 libagm_mixer_plugin_la_LDFLAGS += -lagm -L$(top_builddir)/service/.libs
 else
-libagm_mixer_plugin_la_LDFLAGS += -lagmclient -L$(top_builddir)/ipc/DBus/agm_client/.libs
+libagm_mixer_plugin_la_LIBADD += -lagmclient
+libagm_mixer_plugin_la_LDFLAGS += -L$(top_builddir)/ipc/DBus/agm_client/.libs
 endif

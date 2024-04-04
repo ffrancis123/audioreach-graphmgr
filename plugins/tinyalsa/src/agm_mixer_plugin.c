@@ -2244,8 +2244,9 @@ static int amp_form_acdb_ctls(struct amp_priv *amp_priv, int ctl_idx)
 }
 
 static ssize_t amp_read_event(struct mixer_plugin *plugin,
-                              struct mixer_ctl_event *ev, size_t size) 
+                              struct snd_ctl_event *snd_ev, size_t size)
 {
+    struct mixer_ctl_event *ev = (struct mixer_ctl_event *)snd_ev;
     struct amp_priv *amp_priv = plugin->priv;
     ssize_t result = 0;
 
