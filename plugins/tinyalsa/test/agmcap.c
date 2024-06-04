@@ -26,8 +26,8 @@
 ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 ** DAMAGE.
 **
-** Changes from Qualcomm Innovation Center are provided under the following license:
-** Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+** Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+** Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 ** SPDX-License-Identifier: BSD-3-Clause-Clear
 */
 
@@ -69,7 +69,7 @@ int capturing = 1;
 
 static unsigned int capture_sample(FILE *file, unsigned int card, unsigned int device,
                             unsigned int channels, unsigned int rate,
-                            enum pcm_format format, unsigned int period_size,
+                            unsigned int bits, enum pcm_format format, unsigned int period_size,
                             unsigned int period_count, unsigned int cap_time,
                             struct device_config *dev_config, unsigned int stream_kv,
                             unsigned int device_kv, unsigned int instance_kv,
@@ -248,7 +248,7 @@ int main(int argc, char **argv)
     signal(SIGHUP, sigint_handler);
     signal(SIGTERM, sigint_handler);
     frames = capture_sample(file, card, device, header.num_channels,
-                            header.sample_rate, format,
+                            header.sample_rate, bits, format,
                             period_size, period_count, cap_time, &config,
                             stream_kv, device_kv, instance_kv, devicepp_kv);
     printf("Captured %u frames\n", frames);
@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 
 unsigned int capture_sample(FILE *file, unsigned int card, unsigned int device,
                             unsigned int channels, unsigned int rate,
-                            enum pcm_format format, unsigned int period_size,
+                            unsigned int bits, enum pcm_format format, unsigned int period_size,
                             unsigned int period_count, unsigned int cap_time,
                             struct device_config *dev_config, unsigned int stream_kv,
                             unsigned int device_kv, unsigned int instance_kv, unsigned int devicepp_kv)
@@ -299,6 +299,13 @@ unsigned int capture_sample(FILE *file, unsigned int card, unsigned int device,
     if (!mixer) {
         printf("Failed to open mixer\n");
         return 0;
+    }
+
+    if(strcmp(intf_name, "USB_AUDIO-TX") == 0) {
+        dev_config->rate = rate;
+        dev_config->ch = channels;
+        dev_config->bits = bits;
+        dev_config->format = PCM_FORMAT_INVALID;
     }
 
     /* set device/audio_intf media config mixer control */
