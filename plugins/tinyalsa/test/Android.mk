@@ -136,8 +136,8 @@ ifeq ($(TARGET_USES_QTI_TINYCOMPRESS),true)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa\
                           libqti-tinycompress
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa\
-                          libtinycompress
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa\
+                          liboss_tinycompress
 endif
 
 LOCAL_SHARED_LIBRARIES += \
@@ -170,8 +170,8 @@ ifeq ($(TARGET_USES_QTI_TINYCOMPRESS),true)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa\
                           libqti-tinycompress
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa\
-                          libtinycompress
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa\
+                          liboss_tinycompress
 endif
 
 LOCAL_SHARED_LIBRARIES += \
