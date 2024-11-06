@@ -26,7 +26,7 @@ LOCAL_SHARED_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_DYNAMIC_LOG)), true)
@@ -64,7 +64,7 @@ LOCAL_SHARED_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_DYNAMIC_LOG)), true)
@@ -121,4 +121,3 @@ LOCAL_HEADER_LIBRARIES += libaudiologutils_headers
 endif
 
 include $(BUILD_SHARED_LIBRARY)
-

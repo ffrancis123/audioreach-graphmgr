@@ -18,7 +18,7 @@ LOCAL_HEADER_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 
@@ -48,7 +48,7 @@ LOCAL_HEADER_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 LOCAL_SHARED_LIBRARIES += \
@@ -75,7 +75,7 @@ LOCAL_HEADER_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 LOCAL_SHARED_LIBRARIES += \
@@ -103,7 +103,7 @@ LOCAL_HEADER_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 LOCAL_SHARED_LIBRARIES += \
@@ -201,7 +201,7 @@ LOCAL_HEADER_LIBRARIES := \
 ifneq ($(filter 11 R, $(PLATFORM_VERSION)),)
 LOCAL_SHARED_LIBRARIES += libqti-tinyalsa
 else
-LOCAL_SHARED_LIBRARIES += libtinyalsa
+LOCAL_SHARED_LIBRARIES += liboss_tinyalsa
 endif
 
 LOCAL_SHARED_LIBRARIES += \
