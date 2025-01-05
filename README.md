@@ -10,7 +10,7 @@ This repository hosts following software components for Linux:
 
 ## Documentation
 
-To be available soon.
+Refer AudioReach docs [here](https://audioreach.github.io/)
 
 ## Build instructions
 
