@@ -16,10 +16,9 @@
 --mandir=/usr/share/man
 --disable-silent-rules
 --disable-dependency-tracking
---with-syslog
 --with-glib
---without-cutils
---with-dummy_diag
---with-qcom
---with-audio_dma_support
+--with-syslog
+--with-no-ipc
 --disable-static
+--without-are-on-apps
+--without-use-default-acdb-path
