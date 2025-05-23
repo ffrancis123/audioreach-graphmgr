@@ -10,22 +10,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Clone meta-ar
-      shell: bash
-      run: |
-        # Clone the meta-ar repository
-        cd ${{ github.workspace }}/..
-        # Check if the directory already exists
-        if [ -d "meta-ar" ]; then
-          echo "Directory meta-ar already exists. Pulling latest changes."
-          cd meta-ar
-          git reset --hard origin/main
-          git pull origin main
-        else
-          echo "Directory meta-ar does not exist. Cloning repository."
-          git clone git@github.com:Audioreach/meta-ar.git
-        fi
-
+   
     - name: Build Project
       id: build
       shell: bash
@@ -33,8 +18,14 @@ runs:
         # Load the build arguments
         set +x
 
-        # Apply patch
-        git apply ../meta-ar/recipes/audio/audioreach-graphservices/0001-ar_osal-update-msm_audio.h-header-include-path.patch
+       # Build inside a docker container
+        source ./install/environment-setup-armv8-2a-poky-linux
+        autoreconf -Wcross --verbose --install --force --exclude=autopoint
+        autoconf --force
+
+        ./configure CFLAGS="-Wno-incompatible-pointer-types" ${{ env.BUILD_ARGS }} 
+        # make
+        make DESTDIR=${{ github.workspace }}/build install
 
         # Build inside a docker container
         docker run \
