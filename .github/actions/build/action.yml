@@ -18,7 +18,7 @@ runs:
         # Load the build arguments
         set +x
 
-       # Build inside a docker container
+        # Build inside a docker container
         source ./install/environment-setup-armv8-2a-poky-linux
         autoreconf -Wcross --verbose --install --force --exclude=autopoint
         autoconf --force
