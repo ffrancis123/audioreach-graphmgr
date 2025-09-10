@@ -1188,12 +1188,33 @@ static int wait_for_snd_card_to_online()
     int ret = 0;
     uint32_t retries = MAX_RETRY;
     int fd = -1;
-    char buf[12];
+    char buf[BUF_SIZE];
+    FILE *fp = NULL;
+    bool snd_card_found = false;
     snd_card_status_t card_status = SND_CARD_STATUS_NONE;
 
     /* wait here till snd card is registered                               */
     /* maximum wait period = (MAX_RETRY * RETRY_INTERVAL_US) micro-seconds */
     do {
+#ifdef CARD_STATE_UNSUPPORTED
+        fp = fopen(SND_CARD_DEVICE_FILE, "r");
+        if (!fp) {
+            AGM_LOGE("Failed to open snd card, will retry for %d times ...", (retries - 1));
+        } else {
+            while (fgets(buf, sizeof(buf), fp)) {
+                if (strstr(buf, "]:") != NULL) {
+                    snd_card_found = true;
+                    AGM_LOGI("Sound card is available");
+                    break;
+                }
+            }
+            fclose(fp);
+            if (snd_card_found)
+                break;
+            else
+                AGM_LOGE("snd card not up, will retry for %d times ...", (retries - 1));
+        }
+#else
         if ((fd = open(SNDCARD_PATH, O_RDWR)) < 0) {
             AGM_LOGE("Failed to open snd sysfs node, will retry for %d times ...", (retries - 1));
         } else {
@@ -1212,12 +1233,13 @@ static int wait_for_snd_card_to_online()
                 break;
             }
         }
+#endif
         retries--;
         sleep(RETRY_INTERVAL);
     } while ( retries > 0);
 
     if (0 == retries) {
-        AGM_LOGE("Failed to open snd sysfs node, exiting ... ");
+        AGM_LOGE("Not found any SND card online, exiting ... ");
         ret = -EIO;
     }
 
@@ -1228,13 +1250,11 @@ int device_init()
 {
     int ret = 0;
 
-#ifndef CARD_STATE_UNSUPPORTED
     ret = wait_for_snd_card_to_online();
     if (ret) {
         AGM_LOGE("Not found any SND card online\n");
         return ret;
     }
-#endif
     ret = parse_snd_card();
     if (ret)
         AGM_LOGE("no valid snd device found\n");
