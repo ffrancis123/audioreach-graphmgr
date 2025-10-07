@@ -44,6 +44,7 @@
 #include <sys/time.h>
 #include <limits.h>
 #include <linux/ioctl.h>
+#include <pthread.h>
 
 #include <sound/asound.h>
 

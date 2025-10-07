@@ -40,6 +40,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <tinyalsa/plugin.h>
@@ -929,7 +930,7 @@ int agm_pcm_open(struct pcm_plugin **plugin, unsigned int card,
     struct agm_buffer_config *buffer_config;
     uint64_t handle;
     enum agm_session_mode sess_mode = AGM_SESSION_DEFAULT;
-    int ret = 0, session_id = device;
+    int ret = 0, session_id = device, sess_mode_val = 0;
     void *card_node, *pcm_node;
 
     agm_pcm_plugin = calloc(1, sizeof(struct pcm_plugin));
@@ -991,7 +992,8 @@ int agm_pcm_open(struct pcm_plugin **plugin, unsigned int card,
     priv->dev_node = pcm_node;
     priv->session_id = session_id;
     priv->mmap_status = false;
-    snd_card_def_get_int(pcm_node, "session_mode", &sess_mode);
+    snd_card_def_get_int(pcm_node, "session_mode", &sess_mode_val);
+    sess_mode = (enum agm_session_mode)sess_mode_val;
 
     ret = agm_session_open(session_id, sess_mode, &handle);
     if (ret) {
