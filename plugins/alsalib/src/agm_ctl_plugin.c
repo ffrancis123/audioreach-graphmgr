@@ -40,7 +40,7 @@
 #define MIXER_NAME_LEN  128
 #define PCM_NAME_LEN    24
 
-/* enum for different types of control */
+/* enum for different types of control and AXIOM Test */
 enum {
     AGM_FE_CTL_START = 0,
     AGM_FE_CTL_NAME_METADATA = AGM_FE_CTL_START,
