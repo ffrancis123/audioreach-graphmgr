@@ -1138,6 +1138,16 @@ void agm_compress_close(void *data)
     pthread_mutex_unlock(&priv->poll_lock);
 
     /* Make sure callbacks are not running at this point */
+    pthread_mutex_destroy(&priv->eos_lock);
+    pthread_cond_destroy(&priv->eos_cond);
+    pthread_mutex_destroy(&priv->early_eos_lock);
+    pthread_cond_destroy(&priv->early_eos_cond);
+    pthread_mutex_destroy(&priv->drain_lock);
+    pthread_cond_destroy(&priv->drain_cond);
+    pthread_mutex_destroy(&priv->poll_lock);
+    pthread_cond_destroy(&priv->poll_cond);
+    pthread_mutex_destroy(&priv->lock);
+
     free(priv);
 
     return;
