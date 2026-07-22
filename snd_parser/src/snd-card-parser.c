@@ -393,6 +393,8 @@ static void snd_process_data_buf (struct xml_userdata *data, const XML_Char *tag
     if (data->offs <= 0)
         return;
 
+    if (data->offs >= (int)sizeof(data->data_buf))
+        data->offs = sizeof(data->data_buf) - 1;
     data->data_buf[data->offs] = '\0';
 
     if (data->card_parsed)
