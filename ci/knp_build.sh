@@ -15,6 +15,7 @@ if [ -z "${BUILD_ARGS:-}" ]; then
 fi
 
 
+
 echo "Running build script..."
 # Build/Compile audioreach-graphmgr
 source ${GITHUB_WORKSPACE}/install/environment-setup-armv8-6a-qcom-linux
