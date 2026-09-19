@@ -698,11 +698,14 @@ class BpAgmService : public ::android::BpInterface<IAgmService>
 
         remote()->transact(GET_PARAMS, data, &reply);
 
-        reply.readBlob(count, &get_param_blob);
-        memcpy(payload, get_param_blob.data(), count);
+        int rc = reply.readInt32();
+        if (rc == 0) {
+            reply.readBlob(count, &get_param_blob);
+            memcpy(payload, get_param_blob.data(), count);
+            get_param_blob.release();
+        }
         blob.release();
-        get_param_blob.release();
-        return reply.readInt32();
+        return rc;
     }
 
     virtual int ipc_agm_get_buffer_timestamp(uint32_t session_id, uint64_t *timestamp)
@@ -756,6 +759,7 @@ void ipc_cb (uint32_t session_id, struct agm_event_cb_params *event_params,
 {
     struct listnode *node = NULL;
     clbk_data *handle = NULL;
+    bool found = false;
 
     pthread_mutex_lock(&clbk_data_list_lock);
     list_for_each(node, &clbk_data_list) {
@@ -765,11 +769,12 @@ void ipc_cb (uint32_t session_id, struct agm_event_cb_params *event_params,
         if (handle != NULL && handle->session_id == session_id &&
                               handle->client_data == client_data) {
             AGM_LOGV("%s: Found handle %p\n", __func__, handle);
+            found = true;
             break;
         }
     }
 
-    if (handle!= NULL) {
+    if (found && handle != NULL) {
         sp<ICallback> cb_binder = handle->cb_binder;
         if (cb_binder == NULL) {
             AGM_LOGE("%s Invalid binder handle\n", __func__);
@@ -1337,6 +1342,7 @@ android::status_t BnAgmService::onTransact(uint32_t code,
         memcpy(&atc->kv[0], tkv_blob.data(), tkv_blob_size);
         tkv_blob.release();
         rc = ipc_agm_set_params_with_tag (pcm_idx, be_idx, atc);
+        free(atc);
     set_param_with_tag_fail:
         reply->writeInt32(rc);
         break; }
@@ -1403,9 +1409,10 @@ android::status_t BnAgmService::onTransact(uint32_t code,
     case GET_PARAMS: {
         uint32_t rc, pcm_idx;
         size_t count = 0;
-        void *bn_payload;
+        void *bn_payload = NULL;
         android::Parcel::ReadableBlob blob;
         android::Parcel::WritableBlob get_param_blob;
+        bool blob_written = false;
 
         pcm_idx = data.readUint32();
         count = (size_t) data.readUint32();
@@ -1423,10 +1430,12 @@ android::status_t BnAgmService::onTransact(uint32_t code,
 
         reply->writeBlob(count, false, &get_param_blob);
         memcpy(get_param_blob.data(), bn_payload, count);
+        blob_written = true;
         free(bn_payload);
     session_get_param_fail:
         reply->writeInt32(rc);
-        get_param_blob.release();
+        if (blob_written)
+            get_param_blob.release();
         blob.release();
         break; }
 

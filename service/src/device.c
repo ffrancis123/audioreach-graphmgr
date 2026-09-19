@@ -388,9 +388,12 @@ int device_open(struct device_obj *dev_obj)
                 &config);
     if (!pcm || !pcm_is_ready(pcm)) {
         AGM_LOGE("Unable to open PCM device %u (%s) rate %u ch %d fmt %u",
-                obj->pcm_id, pcm_get_error(pcm), config.rate,
+                obj->pcm_id,
+                pcm ? pcm_get_error(pcm) : "pcm is NULL", config.rate,
                 config.channels, config.format);
         AGM_LOGE("Period Size %d \n", config.period_size);
+        if (pcm)
+            pcm_close(pcm);
         ret = -EIO;
         goto done;
     }
@@ -1091,7 +1094,7 @@ static int parse_virtual_snd_card()
                                           SND_NODE_TYPE_PCM,
                                           node_list, num_nodes);
     if (ret) {
-        AGM_LOGI("%s: failed to get non-alsa pcm node list, err %d, continuing\n", ret);
+        AGM_LOGI("%s: failed to get non-alsa pcm node list, err %d, continuing\n", __func__, ret);
         goto done;
     }
 

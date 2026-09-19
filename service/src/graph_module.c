@@ -2273,7 +2273,6 @@ int configure_gapless(struct module_info *gapless_mod,
     AGM_LOGD("GAPLESS module \n");
 
     if (gph_obj->graph_handle == NULL) {
-        pthread_mutex_unlock(&gph_obj->lock);
         AGM_LOGE("invalid graph handle\n");
         ret = -EINVAL;
         goto done;
@@ -2282,7 +2281,6 @@ int configure_gapless(struct module_info *gapless_mod,
 
     reg_ev_payload = calloc(1, payload_size);
     if (reg_ev_payload == NULL) {
-        pthread_mutex_unlock(&gph_obj->lock);
         AGM_LOGE("calloc failed for reg_ev_payload\n");
         ret = -ENOMEM;
         goto done;
