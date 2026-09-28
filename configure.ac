@@ -128,6 +128,7 @@ AC_SUBST([ATS_CFLAGS])
 if (test "x${with_are_on_apps}" = "xyes"); then
     PKG_CHECK_MODULES([GPR], [gpr])
     AC_SUBST([GPR_LIBS])
+    AC_SUBST([GPR_CFLAGS])
 fi
 
 # tinycompress is not available on all platforms (e.g. Raspberry Pi), so
