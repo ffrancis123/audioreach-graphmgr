@@ -70,7 +70,7 @@ endif
 
 if USE_ARE_ON_APPS
 libagm_la_LIBADD += -lspf @GPR_LIBS@
-libagm_la_CFLAGS += -DARE_ON_APPS
+libagm_la_CFLAGS += -DARE_ON_APPS @GPR_CFLAGS@
 endif
 
 libagm_la_CFLAGS += -D__unused=__attribute__\(\(__unused__\)\)
