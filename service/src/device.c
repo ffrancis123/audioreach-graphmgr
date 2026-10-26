@@ -1411,9 +1411,12 @@ static bool update_snd_card_info(char snd_card_name[])
 
     /* Look for only default codec sound card */
     /* Ignore USB sound card if detected */
-    /* Example of data read from /proc/asound/cards: */
-    /* card-id [dummyidpsndcard]: dummy-idp-variant-snd- - dummy-idp-variant-snd-card */
-    /*                       dummy-idp-variant-snd-card */
+    /* /proc/asound/cards format (two formats supported):
+     * Old: card-id [shortname]: driver - shortname
+     *                      longname
+     * New: card-id [shortname]: driver - longname
+     *      (longname parsed directly from " - " suffix of line1)
+     */
     do {
         if (!fgets(line1, BUF_SIZE - 1, file)) {
             break;
@@ -1428,7 +1431,16 @@ static bool update_snd_card_info(char snd_card_name[])
         line2[len - 1] = '\0';
 
         if (check_and_update_snd_card(line1)) {
-            card_name = strtok_r(line2, "[:] ", &tmp);
+            /* Prefer long name from " - <name>" suffix of line1 */
+            card_name = strstr(line1, " - ");
+            if (card_name != NULL) {
+                card_name += 3; /* skip " - " */
+                if (*card_name == '\0')
+                    card_name = NULL;
+            }
+            /* Fall back to first token of line2 (legacy format) */
+            if (card_name == NULL)
+                card_name = strtok_r(line2, "[:] ", &tmp);
             if (card_name != NULL) {
                 strlcpy(snd_card_name, card_name, FILE_PATH_EXTN_MAX_SIZE);
                 is_updated = true;
